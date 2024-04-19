@@ -96,6 +96,7 @@ clean-all:
 	
 .PHONY: release
 release:
+	git pull
 	$(eval CURRENT_VERSION=$(shell git describe --tags `git rev-list --tags --max-count=1`))
 	$(eval MAJOR=$(shell echo $(CURRENT_VERSION) | sed 's/v\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\1/'))
 	$(eval MINOR=$(shell echo $(CURRENT_VERSION) | sed 's/v\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\2/'))
@@ -109,6 +110,7 @@ release:
 
 .PHONY: release-minor
 release-minor:
+	git pull
 	$(eval CURRENT_VERSION=$(shell git describe --tags `git rev-list --tags --max-count=1`))
 	$(eval MAJOR=$(shell echo $(CURRENT_VERSION) | sed 's/v\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\1/'))
 	$(eval MINOR=$(shell echo $(CURRENT_VERSION) | sed 's/v\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\2/'))
@@ -121,6 +123,7 @@ release-minor:
 
 .PHONY: release-major
 release-major:
+	git pull
 	$(eval CURRENT_VERSION=$(shell git describe --tags `git rev-list --tags --max-count=1`))
 	$(eval MAJOR=$(shell echo $(CURRENT_VERSION) | sed 's/v\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\1/'))
 	$(eval NEW_MAJOR=$(shell echo $$(( $(MAJOR) + 1 ))))
