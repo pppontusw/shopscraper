@@ -1,0 +1,18 @@
+email:
+  server: smtp.mailgun.org
+  recipient: john@example.com
+  sender: shopscraper@example.com
+  subject: New items found
+  port: 587
+
+scrapers:
+  - shopName: ExampleShop
+    type: WebShopScraper
+    urls:
+      - https://example.com/products
+    itemSelector: div.product
+    nameSelector: h2.product-name
+    priceSelector: 
+      - span.price
+    linkSelector: a.product-link
+    nextPageSelector: a.next-page

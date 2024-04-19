@@ -1,0 +1,4 @@
+venv/
+config/*.yaml
+!config/config.example.yaml
+.github/workflows/deploy-frontend.yml

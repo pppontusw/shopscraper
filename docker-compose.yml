@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: Test1234
+      POSTGRES_DB: test
+    ports:
+      - 5432:5432
+    
+  scraper:
+    build: .
+    environment:
+      SHOPSCRAPER_DB_CONNECTION_STRING: postgresql://test:Test1234@postgres:5432/test?sslmode=disable
+    depends_on:
+      - postgres
+    command: ["/wait-for-it.sh", "postgres:5432", "--", "./scraper", "--daemon"]
+    volumes:
+      - ./config:/app/config
+
+  mailer:
+    build: .
+    environment:
+      SHOPSCRAPER_DB_CONNECTION_STRING: postgresql://test:Test1234@postgres:5432/test?sslmode=disable
+      SHOPSCRAPER_SMTP_PASSWORD: test
+    depends_on:
+      - postgres
+    command: ["/wait-for-it.sh", "postgres:5432", "--", "./mailer", "--daemon", "--config-path", "./config/config.mailer.yaml"]
+    volumes:
+      - ./config:/app/config
+      
+  api:
+    build: .
+    environment:
+      SHOPSCRAPER_DB_CONNECTION_STRING: postgresql://test:Test1234@postgres:5432/test?sslmode=disable
+      SHOPSCRAPER_API_KEY: Test1234
+    depends_on:
+      - postgres
+    command: ["/wait-for-it.sh", "postgres:5432", "--", "./api"]
+    ports:
+      - 8080:8080
+    volumes:
+      - ./config:/app/config

@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: shopscraper
+      POSTGRES_PASSWORD: SuperSecurePasswordShouldBePutHere
+      POSTGRES_DB: shopscraper
+    
+  scraper:
+    image: ghcr.io/pppontusw/shopscraper:latest
+    environment:
+      SHOPSCRAPER_DB_CONNECTION_STRING: postgresql://shopscraper:SuperSecurePasswordShouldBePutHere@postgres:5432/shopscraper?sslmode=disable
+    depends_on:
+      - postgres
+    command: ["/wait-for-it.sh", "postgres:5432", "--", "./scraper", "--daemon", "--config-path", "./config/config.example.yaml",  "--interval", "1h"]
+    volumes:
+      - ./config:/app/config
+
+  mailer:
+    image: ghcr.io/pppontusw/shopscraper:latest
+    environment:
+      SHOPSCRAPER_DB_CONNECTION_STRING: postgresql://shopscraper:SuperSecurePasswordShouldBePutHere@postgres:5432/shopscraper?sslmode=disable
+      SHOPSCRAPER_SMTP_PASSWORD: test
+    depends_on:
+      - postgres
+    command: ["/wait-for-it.sh", "postgres:5432", "--", "./mailer", "--daemon", "--config-path", "./config/config.example.yaml", "--interval", "5m"]
+    volumes:
+      - ./config:/app/config
+      
+  api:
+    image: ghcr.io/pppontusw/shopscraper:latest
+    environment:
+      SHOPSCRAPER_DB_CONNECTION_STRING: postgresql://shopscraper:SuperSecurePasswordShouldBePutHere@postgres:5432/shopscraper?sslmode=disable
+      SHOPSCRAPER_API_KEY: SuperSecureAPIKeyShouldBePutHere
+    depends_on:
+      - postgres
+    command: ["/wait-for-it.sh", "postgres:5432", "--", "./api"]
+    ports:
+      - 8080:8080
+    volumes:
+      - ./config:/app/config
