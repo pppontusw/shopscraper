@@ -38,13 +38,15 @@ const ProductTable = ({
       field: 'lastSeen',
       headerName: 'Last Seen',
       minWidth: 150,
-      valueGetter: (params) => timeAgo(new Date(params)),
+      valueGetter: (params) => new Date(params),
+      renderCell: (cellValues) => (timeAgo(cellValues.value)),
     },
     {
       field: 'firstSeen',
       headerName: 'First Seen',
       minWidth: 150,
-      valueGetter: (params) => timeAgo(new Date(params)),
+      valueGetter: (params) => new Date(params),
+      renderCell: (cellValues) => (timeAgo(cellValues.value)),
     },
     { field: 'notified', headerName: 'Notified', minWidth: 50 },
   ];
