@@ -203,6 +203,8 @@ ShopScraper provides multiple ways to run the scraper, mailer, and API component
 
 ### Running with Docker
 
+First make sure you have the configuration in place in `config/config.yaml`.
+
 1. Build the Docker image:
 
    ```shell
@@ -239,7 +241,7 @@ ShopScraper provides multiple ways to run the scraper, mailer, and API component
    ```shell
     export SHOPSCRAPER_SMTP_PASSWORD="YOUR-SMTP-PASSWORD"
     export SHOPSCRAPER_DB_CONNECTION_STRING="postgresql://YOUR-PRODUCTION-POSTGRES-CONNECTION-STRING"
-   ./mailer --config-path ./config/config.mailer.yaml --daemon
+   ./mailer --config-path ./config/config.yaml --daemon
    ```
 
 4. Run the API:
@@ -265,7 +267,7 @@ ShopScraper provides multiple ways to run the scraper, mailer, and API component
    make run-scraper
    ```
 
-   This will run the scraper using `go run cmd/scraper/main.go`.
+   This will run the scraper (once) using `go run cmd/scraper/main.go`.
 
 3. Run the mailer:
 
@@ -275,7 +277,7 @@ ShopScraper provides multiple ways to run the scraper, mailer, and API component
    make run-mailer
    ```
 
-   This will run the mailer using `go run cmd/mailer/main.go`.
+   This will run the mailer (once) using `go run cmd/mailer/main.go`.
 
 4. Run the API:
 
@@ -310,7 +312,15 @@ For development:
 
 ### Frontend
 
-To deploy the frontend to AWS S3 and CloudFront, create the resources and set the following environment variables:
+To deploy the frontend to AWS S3 and CloudFront:
+
+Create the necessary resources in AWS:
+
+- S3 bucket
+- ACM Certificate (to enable https on cloudfront)
+- Cloudfront Distribution
+
+Once all the resources are in place, make sure that you have AWS CLI configured and set the following environment variables:
 
 - `S3_BUCKET_NAME`: The name of the S3 bucket to deploy to.
 - `DISTRIBUTION_ID`: The ID of the CloudFront distribution.

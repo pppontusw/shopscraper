@@ -17,7 +17,7 @@ services:
       SHOPSCRAPER_DB_CONNECTION_STRING: postgresql://test:Test1234@postgres:5432/test?sslmode=disable
     depends_on:
       - postgres
-    command: ["/wait-for-it.sh", "postgres:5432", "--", "./scraper", "--daemon"]
+    command: ["/wait-for-it.sh", "postgres:5432", "--", "./scraper", "--daemon", "--config-path", "./config/config.yaml"]
     volumes:
       - ./config:/app/config
 
@@ -28,7 +28,7 @@ services:
       SHOPSCRAPER_SMTP_PASSWORD: test
     depends_on:
       - postgres
-    command: ["/wait-for-it.sh", "postgres:5432", "--", "./mailer", "--daemon", "--config-path", "./config/config.mailer.yaml"]
+    command: ["/wait-for-it.sh", "postgres:5432", "--", "./mailer", "--daemon", "--config-path", "./config/config.yaml"]
     volumes:
       - ./config:/app/config
       
