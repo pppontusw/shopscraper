@@ -4,6 +4,38 @@ import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import timeAgo from '../utils/timeAgo';
 import CustomToolbar from './CustomToolbar';
 
+const getApplyFilterFn = (value) => {
+  if (!value) {
+    return null;
+  }
+
+  const words = value.split(' ') || [];
+  // Filter out empty quotes
+  const filteredWords = words.filter(word => word !== '""');
+
+  return (cellValue) => {
+    // Split the cell value into individual words
+    const cellWords = cellValue.split(' ');
+
+    return filteredWords.every(word => {
+      if (word.startsWith('"') && word.endsWith('"')) {
+        // Exact word matching for quoted phrases
+        const exactWord = word.slice(1, -1);
+        return cellWords.some(cellWord => cellWord.toLowerCase() === exactWord.toLowerCase());
+      } else {
+
+        // Normalize commas to periods for matching interchangeably
+        const normalizedWord = word.replace(/,/g, '.');
+        return cellWords.some(cellWord => {
+          const normalizedCellWord = cellWord.replace(/,/g, '.');
+          return normalizedCellWord.toLowerCase().includes(normalizedWord.toLowerCase());
+        });
+      }
+    });
+  };
+};
+
+
 const ProductTable = ({
   loading,
   products,
@@ -23,7 +55,8 @@ const ProductTable = ({
         <Link href={cellValues.row.link} target="_blank" rel="noopener noreferrer">
           {cellValues.value}
         </Link>
-      )
+      ),
+      getApplyQuickFilterFn: getApplyFilterFn,
     },
     {
       field: 'previousPrice',
