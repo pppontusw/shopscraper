@@ -8,7 +8,7 @@ const CustomToolbar = ({ onRefresh }) => {
   return (
     <GridToolbarContainer >
       <GridToolbarDensitySelector />
-      <GridToolbarExport  />
+      <GridToolbarExport />
       <Button size="small" onClick={onRefresh} startIcon={<RefreshIcon />} sx={{ p: 0 }}>
         Refresh
       </Button>
