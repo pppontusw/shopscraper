@@ -158,6 +158,7 @@ scrapers:
 - `--debug`: Enable debug mode to print additional information during scraping.
 - `--config-path`: Specify the path to the configuration YAML file (default: `./config/config.yaml`).
 - `--interval`: Interval between scraper runs. (only applicable in daemon mode)
+- `--max-workers`: Maximum numbers of workers per scraper.
 
 #### Mailer
 
