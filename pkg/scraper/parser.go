@@ -87,13 +87,21 @@ func (bs *BaseScraper) ParseHTML(htmlContent, fetchedUrl string) ([]models.Produ
 		itemName = strings.TrimLeft(itemName, "-. \t\n")
 		itemName = strings.TrimRight(itemName, "-. \t\n")
 
-		itemPrice, err := bs.GetPrice(s)
-		if err != nil {
-			log.Printf("Failed to get price %v", err)
+		var itemPrice int
+		if len(bs.Config.PriceSelector) != 0 {
+			itemPrice, err = bs.GetPrice(s)
+			if err != nil {
+				log.Printf("Failed to get price %v", err)
+			}
+		} else {
+			itemPrice = 0
 		}
 
 		itemLink, _ := s.Find(bs.Config.LinkSelector).Attr("href")
-		itemLink = utils.EnsureFullUrl(itemLink, fetchedUrl)
+		itemLink, err = utils.EnsureFullUrl(itemLink, fetchedUrl)
+		if err != nil {
+			log.Printf("Failed to get full URL %v", err)
+		}
 
 		if itemName != "" && itemLink != "" {
 			product := models.Product{
@@ -131,7 +139,10 @@ func (bs *BaseScraper) ParseHTML(htmlContent, fetchedUrl string) ([]models.Produ
 				return
 			}
 			if href, exists := s.Attr("href"); exists {
-				nextURL = utils.EnsureFullUrl(href, fetchedUrl)
+				nextURL, err = utils.EnsureFullUrl(href, fetchedUrl)
+				if err != nil {
+					log.Printf("Failed to get full URL %v", err)
+				}
 			}
 		})
 	}
