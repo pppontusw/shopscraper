@@ -9,7 +9,10 @@ func TestEnsureFullUrl(t *testing.T) {
 	newUrl := ""
 	fetchedUrl := "https://example.com"
 	expectedResult := ""
-	result := EnsureFullUrl(newUrl, fetchedUrl)
+	result, err := EnsureFullUrl(newUrl, fetchedUrl)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	if result != expectedResult {
 		t.Errorf("Expected %s, but got %s", expectedResult, result)
 	}
@@ -18,7 +21,10 @@ func TestEnsureFullUrl(t *testing.T) {
 	newUrl = "https://example.com/product1"
 	fetchedUrl = "https://example.com"
 	expectedResult = "https://example.com/product1"
-	result = EnsureFullUrl(newUrl, fetchedUrl)
+	result, err = EnsureFullUrl(newUrl, fetchedUrl)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	if result != expectedResult {
 		t.Errorf("Expected %s, but got %s", expectedResult, result)
 	}
@@ -27,7 +33,10 @@ func TestEnsureFullUrl(t *testing.T) {
 	newUrl = "/product1"
 	fetchedUrl = "https://example.com"
 	expectedResult = "https://example.com/product1"
-	result = EnsureFullUrl(newUrl, fetchedUrl)
+	result, err = EnsureFullUrl(newUrl, fetchedUrl)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	if result != expectedResult {
 		t.Errorf("Expected %s, but got %s", expectedResult, result)
 	}
@@ -36,7 +45,10 @@ func TestEnsureFullUrl(t *testing.T) {
 	newUrl = "/product1?param=value"
 	fetchedUrl = "https://example.com"
 	expectedResult = "https://example.com/product1?param=value"
-	result = EnsureFullUrl(newUrl, fetchedUrl)
+	result, err = EnsureFullUrl(newUrl, fetchedUrl)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	if result != expectedResult {
 		t.Errorf("Expected %s, but got %s", expectedResult, result)
 	}
@@ -45,7 +57,22 @@ func TestEnsureFullUrl(t *testing.T) {
 	newUrl = "/product1#section"
 	fetchedUrl = "https://example.com"
 	expectedResult = "https://example.com/product1#section"
-	result = EnsureFullUrl(newUrl, fetchedUrl)
+	result, err = EnsureFullUrl(newUrl, fetchedUrl)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+	if result != expectedResult {
+		t.Errorf("Expected %s, but got %s", expectedResult, result)
+	}
+
+	// Test case 6: newUrl contains ./
+	newUrl = "./baz.php"
+	fetchedUrl = "https://example.com/foo/bar.php"
+	expectedResult = "https://example.com/foo/baz.php"
+	result, err = EnsureFullUrl(newUrl, fetchedUrl)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	if result != expectedResult {
 		t.Errorf("Expected %s, but got %s", expectedResult, result)
 	}
