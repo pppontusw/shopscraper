@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func EnsureFullUrl(newUrl, fetchedUrl string, uniqueParameters []string) (string, error) {
+func EnsureFullUrl(newUrl, fetchedUrl string, uniqueParameters []string, removeFragment bool) (string, error) {
 	newUrl = strings.TrimSpace(newUrl)
 	if newUrl == "" {
 		return "", nil
@@ -67,6 +67,10 @@ func EnsureFullUrl(newUrl, fetchedUrl string, uniqueParameters []string) (string
 		queryParams.Del(param)
 	}
 	finalUrl.RawQuery = queryParams.Encode()
+
+	if removeFragment {
+		finalUrl.Fragment = ""
+	}
 
 	// Return the modified URL
 	return finalUrl.String(), nil
