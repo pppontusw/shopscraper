@@ -98,7 +98,7 @@ func (bs *BaseScraper) ParseHTML(htmlContent, fetchedUrl string) ([]models.Produ
 		}
 
 		itemLink, _ := s.Find(bs.Config.LinkSelector).Attr("href")
-		itemLink, err = utils.EnsureFullUrl(itemLink, fetchedUrl)
+		itemLink, err = utils.EnsureFullUrl(itemLink, fetchedUrl, bs.Config.UniqueParameters)
 		if err != nil {
 			log.Printf("Failed to get full URL %v", err)
 		}
@@ -139,7 +139,7 @@ func (bs *BaseScraper) ParseHTML(htmlContent, fetchedUrl string) ([]models.Produ
 				return
 			}
 			if href, exists := s.Attr("href"); exists {
-				nextURL, err = utils.EnsureFullUrl(href, fetchedUrl)
+				nextURL, err = utils.EnsureFullUrl(href, fetchedUrl, []string{})
 				if err != nil {
 					log.Printf("Failed to get full URL %v", err)
 				}
