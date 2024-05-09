@@ -78,6 +78,10 @@ func (bs *BaseScraper) Scrape(maxWorkers int) ([]models.Product, error) {
 					break // Exit loop if there's no next URL
 				}
 
+				if nextURL == currentURL {
+					break // Exit loop if the next URL is the same as the current URL
+				}
+
 				currentURL = nextURL
 			}
 		}(url)
