@@ -17,6 +17,8 @@ type ScraperConfig struct {
 	NextPageSelector string   `yaml:"nextPageSelector"`
 	PriceFormat      string   `yaml:"priceFormat"`
 	RetryString      string   `yaml:"retryString"`
+	UniqueParameters []string `yaml:"uniqueParameters"`
+	RemoveFragment   bool     `yaml:"removeFragment"`
 }
 
 type EmailConfig struct {
