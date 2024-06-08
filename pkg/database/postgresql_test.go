@@ -62,7 +62,7 @@ func TestGetAllProducts(t *testing.T) {
 		('Product 2', 'Shop 2', '19', 'https://example.com/product2', $1, $1, false)
 	`, db.productTableName)
 
-	_, err := db.db.Exec(query, time.Now())
+	_, err := db.db.Exec(query, time.Now().UTC())
 	if err != nil {
 		t.Fatalf("Failed to insert test data: %v", err)
 	}
@@ -103,7 +103,7 @@ func TestGetNonNotifiedProducts(t *testing.T) {
 			('Product 3', 'Shop 3', '5', 'https://example.com/product3', $1, $1, false)
 		`, db.productTableName)
 
-	_, err := db.db.Exec(query, time.Now())
+	_, err := db.db.Exec(query, time.Now().UTC())
 	if err != nil {
 		t.Fatalf("Failed to insert test data: %v", err)
 	}

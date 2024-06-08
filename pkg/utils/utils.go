@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 )
 
 func EnsureFullUrl(newUrl, fetchedUrl string, uniqueParameters []string, removeFragment bool) (string, error) {
@@ -74,4 +75,15 @@ func EnsureFullUrl(newUrl, fetchedUrl string, uniqueParameters []string, removeF
 
 	// Return the modified URL
 	return finalUrl.String(), nil
+}
+
+func GetPastTimeThreshold(duration time.Duration) time.Time {
+	// Ensure the duration is always negative as there is no point to remove products last seen in the future
+	if duration > 0 {
+		duration = -duration
+	}
+
+	threshold := time.Now().UTC().Add(duration)
+
+	return threshold
 }

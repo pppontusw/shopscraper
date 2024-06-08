@@ -58,11 +58,12 @@ func getAndNotify(programConfig config.ProgramConfig) {
 	if len(nonNotifiedProducts) > 0 {
 		err = mailer.SendEmail(&mailer.RealSmtpSender{}, nonNotifiedProducts, programConfig)
 		if err != nil {
-			log.Fatalf("error: %v", err)
-		}
-		err = db.SetNotifiedProducts(nonNotifiedProducts)
-		if err != nil {
-			log.Fatalf("error: %v", err)
+			log.Printf("error: %v", err)
+		} else {
+			err = db.SetNotifiedProducts(nonNotifiedProducts)
+			if err != nil {
+				log.Fatalf("error: %v", err)
+			}
 		}
 	} else {
 		log.Println("No products found to notify")

@@ -72,7 +72,7 @@ func TestRunScrapersWithMockScraper(t *testing.T) {
 	}
 
 	maxWorkers := 2
-	runScrapers(mockScrapers, maxWorkers)
+	runScrapers(mockScrapers, maxWorkers, -1*time.Hour)
 
 	retrievedProducts, err := db.GetAllProducts()
 	if err != nil {
@@ -127,7 +127,7 @@ func TestRunScrapersWithMockGetHTML(t *testing.T) {
 	}
 
 	maxWorkers := 1
-	runScrapers(scrapers, maxWorkers)
+	runScrapers(scrapers, maxWorkers, 1*time.Hour)
 
 	products, err := db.GetAllProducts()
 	if err != nil {
@@ -140,7 +140,7 @@ func TestRunScrapersWithMockGetHTML(t *testing.T) {
 			Shop:     "Test Shop",
 			Price:    1499,
 			Link:     "http://example.com/product1",
-			LastSeen: time.Now(),
+			LastSeen: time.Now().UTC(),
 			Notified: false,
 		},
 		{
@@ -148,7 +148,7 @@ func TestRunScrapersWithMockGetHTML(t *testing.T) {
 			Shop:     "Test Shop",
 			Price:    2999,
 			Link:     "http://example.com/product2",
-			LastSeen: time.Now(),
+			LastSeen: time.Now().UTC(),
 			Notified: false,
 		},
 	}

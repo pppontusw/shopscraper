@@ -161,7 +161,7 @@ func TestParseHTML(t *testing.T) {
 			Shop:     "Test Shop",
 			Price:    1499,
 			Link:     "https://example.com/product1",
-			LastSeen: time.Now(),
+			LastSeen: time.Now().UTC(),
 			Notified: false,
 		},
 		{
@@ -169,7 +169,7 @@ func TestParseHTML(t *testing.T) {
 			Shop:     "Test Shop",
 			Price:    2999,
 			Link:     "https://example.com/product2",
-			LastSeen: time.Now(),
+			LastSeen: time.Now().UTC(),
 			Notified: false,
 		},
 	}

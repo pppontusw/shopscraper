@@ -35,8 +35,10 @@ func main() {
 	var daemonMode bool
 	var interval time.Duration
 	var maxWorkers int
+	var keepDuration time.Duration
 	flag.BoolVar(&daemonMode, "daemon", false, "enable daemon mode")
 	flag.DurationVar(&interval, "interval", 1*time.Hour, "interval between scrapes (e.g., 30m, 1h, 2h45m)")
+	flag.DurationVar(&keepDuration, "keep-duration", 72*time.Hour, "duration to keep products in the database")
 	flag.IntVar(&maxWorkers, "max-workers", 3, "maximum number of workers per scraper")
 	flag.BoolVar(&debugMode, "debug", false, "enable debug mode")
 	flag.StringVar(&configPath, "config-path", "./config/config.yaml", "path to configuration yaml file")
@@ -60,17 +62,17 @@ func main() {
 
 	if daemonMode {
 		for {
-			runScrapers(scrapers, maxWorkers)
+			runScrapers(scrapers, maxWorkers, keepDuration)
 			fmt.Printf("\nRun finished, waiting %s before next run..\n", interval.String())
 			time.Sleep(interval)
 		}
 	} else {
-		runScrapers(scrapers, maxWorkers)
+		runScrapers(scrapers, maxWorkers, keepDuration)
 	}
 }
 
 // runScrapers runs the scrapers and processes the results
-func runScrapers(scrapers []scraper.Scraper, maxWorkers int) {
+func runScrapers(scrapers []scraper.Scraper, maxWorkers int, keepDuration time.Duration) {
 	// Create channels to receive scraped products from each scraper
 	productChans := make([]chan []models.Product, len(scrapers))
 
@@ -119,7 +121,7 @@ func runScrapers(scrapers []scraper.Scraper, maxWorkers int) {
 	}
 
 	// Remove items from the database that haven't been seen in 3 days or more
-	db.RemoveOldProducts()
+	db.RemoveOldProducts(keepDuration)
 
 	if debugMode {
 		log.Println("New products:")
