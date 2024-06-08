@@ -2,6 +2,7 @@ package utils
 
 import (
 	"testing"
+	"time"
 )
 
 func TestEnsureFullUrl(t *testing.T) {
@@ -123,5 +124,27 @@ func TestEnsureFullUrl(t *testing.T) {
 	}
 	if result != expectedResult {
 		t.Errorf("Expected %s, but got %s", expectedResult, result)
+	}
+}
+
+func TestGetPastTimeThreshold(t *testing.T) {
+	tests := []struct {
+		duration time.Duration
+		expected time.Time
+	}{
+		{1 * time.Hour, time.Now().UTC().Add(-1 * time.Hour)},
+		{5 * time.Hour, time.Now().UTC().Add(-5 * time.Hour)},
+		{24 * time.Hour, time.Now().UTC().Add(-24 * time.Hour)},
+		{-3 * time.Hour, time.Now().UTC().Add(-3 * time.Hour)},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.expected.String(), func(t *testing.T) {
+			got := GetPastTimeThreshold(tt.duration)
+			// Allowing a margin for potential delays in computation
+			if got.Before(tt.expected.Add(-5*time.Second)) || got.After(tt.expected.Add(5*time.Second)) {
+				t.Errorf("GetPastTimeThreshold(%v) = %v, want %v", tt.duration, got, tt.expected)
+			}
+		})
 	}
 }

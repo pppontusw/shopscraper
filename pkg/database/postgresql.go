@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"shopscraper/pkg/models"
+	"shopscraper/pkg/utils"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -144,18 +145,16 @@ func (p *PostgresDB) SetNotifiedProducts(products []models.Product) error {
 	return nil
 }
 
-func (p *PostgresDB) RemoveOldProducts() error {
-	// Calculate the time threshold (3 days ago)
-	threshold := time.Now().Add(-3 * 24 * time.Hour)
+func (p *PostgresDB) RemoveOldProducts(timeBack time.Duration) error {
+	threshold := utils.GetPastTimeThreshold(timeBack)
 
 	// Delete items from the database where last_seen is older than the threshold
-	_, err := p.db.Exec("DELETE FROM "+p.productTableName+" WHERE last_seen < $1", threshold)
+	_, err := p.db.Exec("DELETE FROM "+p.productTableName+" WHERE last_seen < $1", threshold.UTC())
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	return err
-
 }
 
 func (p *PostgresDB) DropProductTable() error {

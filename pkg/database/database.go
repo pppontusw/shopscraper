@@ -2,6 +2,7 @@ package database
 
 import (
 	"shopscraper/pkg/models"
+	"time"
 )
 
 type Database interface {
@@ -12,6 +13,6 @@ type Database interface {
 	GetAllProducts() ([]models.Product, error)
 	SaveProducts(products []models.Product) ([]models.Product, error)
 	SetNotifiedProducts(products []models.Product) error
-	RemoveOldProducts() error
+	RemoveOldProducts(timeBack time.Duration) error
 	DropProductTable() error
 }

@@ -159,6 +159,7 @@ scrapers:
 - `--config-path`: Specify the path to the configuration YAML file (default: `./config/config.yaml`).
 - `--interval`: Interval between scraper runs. (only applicable in daemon mode)
 - `--max-workers`: Maximum numbers of workers per scraper.
+- `--keep-duration`: Duration of time to keep items in database (ex: 12h, 24h, 72h) (default: 72h)
 
 #### Mailer
 
